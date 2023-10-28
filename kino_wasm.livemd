@@ -1,0 +1,15 @@
+# Kino Wasm
+
+```elixir
+Mix.install([{:kino_wasm, path: "/Users/filipecabaco/workspace/kino_wasm/kino_wasm"}],
+  force: true
+)
+```
+
+## Section
+
+<!-- livebook:{"attrs":{"id":"umZfCRGPQSfWGA==","language":{"key":"TypeScript","value":"typescript"},"languages":[{"key":"Rust","value":"rust"},{"key":"Golang","value":"go"},{"key":"JavaScript","value":"javascript"},{"key":"TypeScript","value":"typescript"},{"key":"Python","value":"python"},{"key":"Ruby","value":"ruby"}],"source":"code here"},"chunks":null,"kind":"Elixir.KinoWasm.CodeCell","livebook_object":"smart_cell"} -->
+
+```elixir
+code(here)
+```
