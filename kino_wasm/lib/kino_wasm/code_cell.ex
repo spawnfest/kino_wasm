@@ -3,11 +3,16 @@ defmodule KinoWasm.CodeCell do
   use Kino.JS.Live
   use Kino.SmartCell, name: "Rust Code Cell"
 
+  require Logger
+
+  alias Kino.AttributeStore
+
   @impl true
   def init(attrs, ctx) do
     placeholder = """
-    fn main() {
-        println!("Hello World!");
+    #[no_mangle]
+    pub extern fn sum(x: i32, y: i32) -> i32 {
+        x + y
     }
     """
 
@@ -15,13 +20,23 @@ defmodule KinoWasm.CodeCell do
       ctx
       |> assign(id: :crypto.strong_rand_bytes(10) |> Base.encode64())
       |> assign(source: attrs["source"] || placeholder)
+      |> assign(output: attrs["output"] || "")
 
     {:ok, ctx, reevaluate_on_change: true}
   end
 
   @impl true
-  def handle_event("blur", %{"source" => source}, ctx) do
-    {:noreply, assign(ctx, source: source)}
+  def to_attrs(ctx) do
+    %{
+      "id" => ctx.assigns.id,
+      "source" => ctx.assigns.source,
+      "output" => ctx.assigns.output
+    }
+  end
+
+  @impl true
+  def to_source(attrs) do
+    attrs["source"]
   end
 
   @impl true
@@ -29,21 +44,22 @@ defmodule KinoWasm.CodeCell do
     {:ok,
      %{
        source: ctx.assigns.source,
-       id: ctx.assigns.id
+       id: ctx.assigns.id,
+       output: ctx.assigns.output
      }, ctx}
   end
 
   @impl true
-  def to_attrs(ctx) do
-    %{
-      "id" => ctx.assigns.id,
-      "source" => ctx.assigns.source
-    }
-  end
+  def handle_event("blur", %{"source" => source}, ctx) do
+    output = WasmRunner.Backend.run(:rust, source)
 
-  @impl true
-  def to_source(attrs) do
-    attrs["source"]
+    ctx =
+      ctx
+      |> assign(source: source)
+      |> assign(output: output)
+
+    AttributeStore.put_attribute(:output, output)
+    {:noreply, ctx}
   end
 
   asset "main.js" do
@@ -66,11 +82,6 @@ defmodule KinoWasm.CodeCell do
          ctx.pushEvent("blur", {source: editor.getValue()})
       });
     }
-    """
-  end
-
-  asset "main.css" do
-    """
     """
   end
 end

@@ -1,18 +1,8 @@
 defmodule WasmRunner do
-  @moduledoc """
-  Documentation for `WasmRunner`.
-  """
+  use Application
 
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> WasmRunner.hello()
-      :world
-
-  """
-  def hello do
-    :world
+  def start(_type, _args) do
+    children = [{DynamicSupervisor, name: WasmRunner.Backend.Supervisor}]
+    Supervisor.start_link(children, strategy: :one_for_one)
   end
 end
