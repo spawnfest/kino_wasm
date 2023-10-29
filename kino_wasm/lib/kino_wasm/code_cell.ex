@@ -5,8 +5,6 @@ defmodule KinoWasm.CodeCell do
 
   require Logger
 
-  alias Kino.AttributeStore
-
   @impl true
   def init(attrs, ctx) do
     placeholder = """
@@ -16,13 +14,15 @@ defmodule KinoWasm.CodeCell do
     }
     """
 
+    IO.inspect(ctx)
+
     ctx =
       ctx
       |> assign(id: :crypto.strong_rand_bytes(10) |> Base.encode64())
       |> assign(source: attrs["source"] || placeholder)
       |> assign(output: attrs["output"] || "")
 
-    {:ok, ctx}
+    {:ok, ctx, editor: [attribute: "code", language: "elixir"]}
   end
 
   @impl true
@@ -36,7 +36,17 @@ defmodule KinoWasm.CodeCell do
 
   @impl true
   def to_source(attrs) do
-    attrs["source"]
+    {args, _} = Code.eval_string(attrs["code"])
+
+    quote do
+      output = WasmRunner.Backend.run(:rust, unquote(attrs["source"]), unquote(args))
+    end
+    |> Macro.to_string()
+  end
+
+  @impl true
+  def scan_eval_result(_, result) do
+    result
   end
 
   @impl true
@@ -73,6 +83,7 @@ defmodule KinoWasm.CodeCell do
       |> assign(loading: false)
 
     send_event(ctx, id, "output", ctx.assigns)
+
     {:noreply, ctx}
   end
 end

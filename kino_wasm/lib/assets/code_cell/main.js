@@ -5,8 +5,6 @@ export function init(ctx, payload) {
   editor = startMonaco(payload);
 
   ctx.handleEvent("output", (payload) => {
-    console.log("new output");
-    console.log(payload);
     ctx.root.innerHTML = baseComponent(payload);
     editor = startMonaco(payload);
     setOnBlurEditorEvent(ctx, editor);
@@ -27,10 +25,8 @@ const setOnBlurEditorEvent = (ctx, editor) => {
   });
 };
 
-const baseComponent = (payload) => `
-  <div style="height:200px; border-radius: 0.375rem;" id="${payload.id}"/>
-  <div>${payload.output}</div>
-  `;
+const baseComponent = (payload) =>
+  `<div style="height:200px; border-radius: 0.375rem;" id="${payload.id}"/> `;
 
 const startMonaco = (payload) =>
   monaco.editor.create(document.getElementById(payload.id), {

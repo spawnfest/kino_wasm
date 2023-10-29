@@ -17,8 +17,7 @@ defmodule WasmRunner.Backend.Rust do
     File.write!("#{path}/src/lib.rs", source)
 
     case System.cmd(cargo_bin(), ["build", "-q"], cd: path, env: env(), stderr_to_stdout: true) do
-      {output, 0} ->
-        Logger.debug(output)
+      {_, 0} ->
         :ok
 
       {error, _} ->
@@ -39,8 +38,7 @@ defmodule WasmRunner.Backend.Rust do
            env: env(),
            stderr_to_stdout: true
          ) do
-      {output, 0} ->
-        Logger.debug(output)
+      {_, 0} ->
         {:ok, URI.parse("#{path}/target/wasm32-unknown-unknown/release/wasm.wasm")}
 
       {error, _} ->
