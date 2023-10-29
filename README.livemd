@@ -1,7 +1,7 @@
 # Kino Wasm
 
 ```elixir
-Mix.install([{:kino_wasm, path: "/Users/filipecabaco/workspace/kino_wasm/kino_wasm"}],
+Mix.install([{:kino_wasm, path: "/Users/filipecabaco/workspace/kino_wasm"}],
   force: true
 )
 ```
@@ -27,14 +27,14 @@ When you add the cell `Rust Code Cell` it will include two fields:
 
 When you change the code in the first editor, it will trigger the `blur` event and send the altered source code to wasm_runner to compile and run based on the args given
 
-<!-- livebook:{"attrs":{"code":"[1,213,11]","id":"b3pR19qf/njV2Q==","output":"number of params does not match. expected 3, got 2","source":"#[no_mangle]\npub extern fn run(x: i32, y: i32, z: i32) -> i32 {\n    x + y\n}\n"},"chunks":null,"kind":"Elixir.KinoWasm.CodeCell","livebook_object":"smart_cell"} -->
+<!-- livebook:{"attrs":{"code":"[1,213,12]","id":"Qw58mwD0P3PtjA==","output":"number of params does not match. expected 3, got 2","source":"#[no_mangle]\npub extern fn run(x: i32, y: i32, z: i32) -> i32 {\n    x + y\n}\n"},"chunks":null,"kind":"Elixir.KinoWasm.CodeCell","livebook_object":"smart_cell"} -->
 
 ```elixir
 output =
   WasmRunner.Backend.run(
     :rust,
     "#[no_mangle]\npub extern fn run(x: i32, y: i32, z: i32) -> i32 {\n    x + y\n}\n",
-    [1, 213, 11]
+    [1, 213, 12]
   )
 ```
 

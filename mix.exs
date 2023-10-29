@@ -23,7 +23,7 @@ defmodule KinoWasm.MixProject do
   defp deps do
     [
       {:kino, "~> 0.11.0"},
-      {:wasm_runner, path: "../wasm_runner"}
+      {:wasm_runner, path: "wasm_runner"}
     ]
   end
 end
