@@ -1,9 +1,7 @@
 # Kino Wasm
 
 ```elixir
-Mix.install([{:kino_wasm, path: "/Users/filipecabaco/workspace/kino_wasm/"}],
-  force: true
-)
+Mix.install([{:kino_wasm, git: "https://github.com/spawnfest/kino_wasm.git"}])
 ```
 
 ## Kino WASM - WebAssembly for multilanguage support in Livebook!
@@ -15,6 +13,7 @@ It includes a secondary library (wasm_runner) that receives the code, compiles i
 Supported languages:
 
 * Rust
+* Zig
 
 <!-- livebook:{"break_markdown":true} -->
 
@@ -27,20 +26,18 @@ When you add the cell `Rust Code Cell` it will include two fields:
 
 When you change the code in the first editor, it will trigger the `blur` event and send the altered source code to wasm_runner to compile and run based on the args given
 
-<!-- livebook:{"attrs":{"code":"[1,2]","id":"U/aW2Pi0OKYFMw==","language":"rust","output":[3],"source":"#[no_mangle]\npub extern fn run(x: i32, y: i32) -> i32 {\n    x + y\n}\n"},"chunks":null,"kind":"Elixir.KinoWasm.RustCodeCell","livebook_object":"smart_cell"} -->
+<!-- livebook:{"attrs":{"code":"[4,2]","id":"FLSSwA6mIKPasg==","language":"rust","output":[3],"source":"#[no_mangle]\npub extern fn run(x: i32, y: i32) -> i32 {\n    x + y\n}\n"},"chunks":null,"kind":"Elixir.KinoWasm.RustCodeCell","livebook_object":"smart_cell"} -->
 
 ```elixir
 output =
   WasmRunner.Backend.run(
     :rust,
     "#[no_mangle]\npub extern fn run(x: i32, y: i32) -> i32 {\n    x + y\n}\n",
-    [1, 2]
+    [4, 2]
   )
 ```
 
 The output of the function is stored in a variable called `output` so it can be used in other livebook cells
-
-<!-- livebook:{"reevaluate_automatically":true} -->
 
 ```elixir
 output
@@ -48,14 +45,18 @@ output
 
 With `Zig Code Cell` we can follow the same idea, some code and then the arguments
 
-<!-- livebook:{"attrs":{"code":"[1,2]","id":"2QxYd0e3z4oVQA==","language":"zig","output":[3],"source":"export fn run(a: i32, b: i32) i32 {\n    return a + b;\n}\n"},"chunks":null,"kind":"Elixir.KinoWasm.ZigCodeCell","livebook_object":"smart_cell"} -->
+<!-- livebook:{"attrs":{"code":"[10,20]","id":"AaBxoDQ6EanshQ==","language":"zig","output":[3],"source":"export fn run(a: i32, b: i32) i32 {\n    return a + b;\n}\n"},"chunks":null,"kind":"Elixir.KinoWasm.ZigCodeCell","livebook_object":"smart_cell"} -->
 
 ```elixir
 output =
   WasmRunner.Backend.run(:zig, "export fn run(a: i32, b: i32) i32 {\n    return a + b;\n}\n", [
-    1,
-    2
+    10,
+    20
   ])
+```
+
+```elixir
+output
 ```
 
 ### Requirements
