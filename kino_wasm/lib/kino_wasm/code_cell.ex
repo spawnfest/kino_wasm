@@ -1,5 +1,5 @@
 defmodule KinoWasm.CodeCell do
-  use Kino.JS, assets_path: "assets"
+  use Kino.JS, assets_path: "lib/assets/code_cell"
   use Kino.JS.Live
   use Kino.SmartCell, name: "Rust Code Cell"
 
@@ -22,7 +22,7 @@ defmodule KinoWasm.CodeCell do
       |> assign(source: attrs["source"] || placeholder)
       |> assign(output: attrs["output"] || "")
 
-    {:ok, ctx, reevaluate_on_change: true}
+    {:ok, ctx}
   end
 
   @impl true
@@ -50,38 +50,29 @@ defmodule KinoWasm.CodeCell do
   end
 
   @impl true
-  def handle_event("blur", %{"source" => source}, ctx) do
+  def handle_event("blur", %{"source" => source}, %{origin: id} = ctx) do
+    ctx =
+      ctx
+      |> assign(loading: true)
+      |> assign(source: source)
+
+    send_event(ctx, id, "loading", nil)
+    send(self(), {:run, id})
+
+    {:noreply, ctx}
+  end
+
+  @impl true
+  def handle_info({:run, id}, %{assigns: %{source: source}} = ctx) do
     output = WasmRunner.Backend.run(:rust, source)
 
     ctx =
       ctx
       |> assign(source: source)
       |> assign(output: output)
+      |> assign(loading: false)
 
-    AttributeStore.put_attribute(:output, output)
+    send_event(ctx, id, "output", ctx.assigns)
     {:noreply, ctx}
-  end
-
-  asset "main.js" do
-    """
-    import * as monaco from "https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/+esm"
-
-    export function init(ctx, payload) {
-      ctx.root.innerHTML = `
-      <div style="height:200px; border-radius: 0.375rem;" id="${payload.id}"/>
-      `
-      let editor = monaco.editor.create(document.getElementById(payload.id), {
-        value: payload.source,
-        language: "rust",
-       	automaticLayout: true,
-        minimap: { enabled: false },
-        theme: "vs-dark"
-      })
-
-      editor.onDidBlurEditorText(()=>{
-         ctx.pushEvent("blur", {source: editor.getValue()})
-      });
-    }
-    """
   end
 end

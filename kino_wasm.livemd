@@ -8,16 +8,12 @@ Mix.install([{:kino_wasm, path: "/Users/filipecabaco/workspace/kino_wasm/kino_wa
 
 ## Section
 
-<!-- livebook:{"attrs":{"id":"x/sJRxU81sVOpA==","output":[4],"source":"#[no_mangle]\npub extern fn sum(x: i32, y: i32) -> i32 {\n    x + y + x\n}\n"},"chunks":null,"kind":"Elixir.KinoWasm.CodeCell","livebook_object":"smart_cell"} -->
+<!-- livebook:{"attrs":{"id":"xS1+T5bEkBHM1g==","output":[13],"source":"#[no_mangle]\npub extern fn sum(x: i32, y: i32) -> i32 {\n    x + y + 10\n}\n"},"chunks":null,"kind":"Elixir.KinoWasm.CodeCell","livebook_object":"smart_cell"} -->
 
 ```elixir
 #[no_mangle]
 pub extern fn sum(x: i32, y: i32) -> i32 {
-    x + y + x
+    x + y + 10
 }
 
-```
-
-```elixir
-output
 ```
