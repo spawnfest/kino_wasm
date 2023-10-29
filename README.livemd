@@ -1,7 +1,7 @@
 # Kino Wasm
 
 ```elixir
-Mix.install([{:kino_wasm, path: "/Users/filipecabaco/workspace/kino_wasm"}],
+Mix.install([{:kino_wasm, git: "https://github.com/spawnfest/kino_wasm.git"}],
   force: true
 )
 ```
