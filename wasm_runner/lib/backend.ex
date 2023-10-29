@@ -27,7 +27,6 @@ defmodule WasmRunner.Backend do
 
   @impl true
   def handle_call({:run, code, args, fun}, _, %{backend: backend, id: id} = state) do
-    IO.inspect(args)
     {:ok, %URI{path: path}} = backend.compile(code, id)
     {:ok, bytes} = File.read(path)
     {:ok, pid} = Wasmex.start_link(%{bytes: bytes})

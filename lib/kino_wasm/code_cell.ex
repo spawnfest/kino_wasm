@@ -14,8 +14,6 @@ defmodule KinoWasm.CodeCell do
     }
     """
 
-    IO.inspect(ctx)
-
     ctx =
       ctx
       |> assign(id: :crypto.strong_rand_bytes(10) |> Base.encode64())
@@ -39,11 +37,10 @@ defmodule KinoWasm.CodeCell do
     args =
       try do
         {args, _} = Code.eval_string(attrs["code"])
-      rescue
+        args
+      catch
         _ -> []
       end
-
-    IO.inspect(args)
 
     quote do
       output = WasmRunner.Backend.run(:rust, unquote(attrs["source"]), unquote(args))
