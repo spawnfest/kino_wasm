@@ -43,6 +43,8 @@ defmodule KinoWasm.CodeCell do
         _ -> []
       end
 
+    IO.inspect(args)
+
     quote do
       output = WasmRunner.Backend.run(:rust, unquote(attrs["source"]), unquote(args))
     end
