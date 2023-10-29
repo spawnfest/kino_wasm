@@ -36,7 +36,11 @@ defmodule KinoWasm.CodeCell do
 
   @impl true
   def to_source(attrs) do
-    {args, _} = Code.eval_string(attrs["code"])
+    args =
+      case Code.eval_string(attrs["code"]) do
+        {:ok, args} -> args
+        {:error, _} -> []
+      end
 
     quote do
       output = WasmRunner.Backend.run(:rust, unquote(attrs["source"]), unquote(args))
