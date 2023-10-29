@@ -1,0 +1,56 @@
+# Kino Wasm
+
+```elixir
+Mix.install([{:kino_wasm, path: "/Users/filipecabaco/workspace/kino_wasm/kino_wasm"}],
+  force: true
+)
+```
+
+## Kino WASM - WebAssembly for multilanguage support in Livebook!
+
+This Smart Cell leverages WebAssembly to achieve multi language support in Livebook.
+
+It includes a secondary library (wasm_runner) that receives the code, compiles it to web assembly and executes said code using [wasmex](https://github.com/tessi/wasmex).
+
+Supported languages:
+
+* Rust
+
+<!-- livebook:{"break_markdown":true} -->
+
+#### Usage
+
+When you add the cell `Rust Code Cell` it will include two fields:
+
+* A Monaco editor for the target language
+* Second editor to specify the arguments
+
+When you change the code in the first editor, it will trigger the `blur` event and send the altered source code to wasm_runner to compile and run based on the args given
+
+<!-- livebook:{"attrs":{"code":"[1,213,11]","id":"b3pR19qf/njV2Q==","output":"number of params does not match. expected 3, got 2","source":"#[no_mangle]\npub extern fn run(x: i32, y: i32, z: i32) -> i32 {\n    x + y\n}\n"},"chunks":null,"kind":"Elixir.KinoWasm.CodeCell","livebook_object":"smart_cell"} -->
+
+```elixir
+output =
+  WasmRunner.Backend.run(
+    :rust,
+    "#[no_mangle]\npub extern fn run(x: i32, y: i32, z: i32) -> i32 {\n    x + y\n}\n",
+    [1, 213, 11]
+  )
+```
+
+The output of the function is stored in a variable called `output` so it can be used in other livebook cells
+
+<!-- livebook:{"reevaluate_automatically":true} -->
+
+```elixir
+output
+```
+
+### Requirements
+
+#### Rust backend
+
+You'll need to install this two dependencies
+
+* Install Rust
+* Install wasm-pack

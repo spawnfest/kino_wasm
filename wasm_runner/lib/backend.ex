@@ -4,14 +4,14 @@ defmodule WasmRunner.Backend do
   @callback compile(binary(), binary()) :: {:ok, URI.t()} | {:error, :failed_to_compile, binary()}
   @placeholder """
   #[no_mangle]
-  pub extern fn sum(x: i32, y: i32) -> i32 {
+  pub extern fn run(x: i32, y: i32) -> i32 {
       x + y
   }
   """
   def start_child(opts),
     do: DynamicSupervisor.start_child(__MODULE__.Supervisor, {__MODULE__, opts})
 
-  def run(:rust, code \\ @placeholder, args \\ [1, 2], fun \\ "sum") do
+  def run(:rust, code \\ @placeholder, args \\ [1, 2], fun \\ "run") do
     id = :crypto.hash(:md5, code) |> Base.encode32()
     {:ok, pid} = start_child(%{backend: WasmRunner.Backend.Rust, id: id})
 

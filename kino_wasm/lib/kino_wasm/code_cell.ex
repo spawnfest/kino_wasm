@@ -9,7 +9,7 @@ defmodule KinoWasm.CodeCell do
   def init(attrs, ctx) do
     placeholder = """
     #[no_mangle]
-    pub extern fn sum(x: i32, y: i32) -> i32 {
+    pub extern fn run(x: i32, y: i32) -> i32 {
         x + y
     }
     """
