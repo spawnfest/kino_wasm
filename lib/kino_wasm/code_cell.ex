@@ -37,8 +37,9 @@ defmodule KinoWasm.CodeCell do
   @impl true
   def to_source(attrs) do
     args =
-      case Code.eval_string(attrs["code"]) do
-        {args, _} -> args
+      try do
+        {args, _} = Code.eval_string(attrs["code"])
+      rescue
         _ -> []
       end
 

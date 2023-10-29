@@ -27,7 +27,7 @@ When you add the cell `Rust Code Cell` it will include two fields:
 
 When you change the code in the first editor, it will trigger the `blur` event and send the altered source code to wasm_runner to compile and run based on the args given
 
-<!-- livebook:{"attrs":{"code":"Stream","id":"N1spIMxS2JC6Wg==","output":"number of params does not match. expected 3, got 2","source":"#[no_mangle]\npub extern fn run(x: i32, y: i32, z: i32) -> i32 {\n    x + y + z\n}\n"},"chunks":null,"kind":"Elixir.KinoWasm.CodeCell","livebook_object":"smart_cell"} -->
+<!-- livebook:{"attrs":{"code":"Stream","id":"Lw73Wk2XG2ccJg==","output":"number of params does not match. expected 3, got 2","source":"#[no_mangle]\npub extern fn run(x: i32, y: i32, z: i32) -> i32 {\n    x + y + z\n}\n"},"chunks":null,"kind":"Elixir.KinoWasm.CodeCell","livebook_object":"smart_cell"} -->
 
 ```elixir
 output =
