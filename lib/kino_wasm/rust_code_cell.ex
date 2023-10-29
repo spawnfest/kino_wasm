@@ -1,4 +1,4 @@
-defmodule KinoWasm.CodeCell do
+defmodule KinoWasm.RustCodeCell do
   use Kino.JS, assets_path: "lib/assets/code_cell"
   use Kino.JS.Live
   use Kino.SmartCell, name: "Rust Code Cell"
@@ -19,6 +19,7 @@ defmodule KinoWasm.CodeCell do
       |> assign(id: :crypto.strong_rand_bytes(10) |> Base.encode64())
       |> assign(source: attrs["source"] || placeholder)
       |> assign(output: attrs["output"] || "")
+      |> assign(language: attrs["language"] || "rust")
 
     {:ok, ctx, editor: [attribute: "code", language: "elixir"]}
   end
@@ -28,7 +29,8 @@ defmodule KinoWasm.CodeCell do
     %{
       "id" => ctx.assigns.id,
       "source" => ctx.assigns.source,
-      "output" => ctx.assigns.output
+      "output" => ctx.assigns.output,
+      "language" => ctx.assigns.language
     }
   end
 
@@ -59,7 +61,8 @@ defmodule KinoWasm.CodeCell do
      %{
        source: ctx.assigns.source,
        id: ctx.assigns.id,
-       output: ctx.assigns.output
+       output: ctx.assigns.output,
+       language: ctx.assigns.language
      }, ctx}
   end
 

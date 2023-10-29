@@ -1,7 +1,7 @@
 # Kino Wasm
 
 ```elixir
-Mix.install([{:kino_wasm, git: "https://github.com/spawnfest/kino_wasm.git"}],
+Mix.install([{:kino_wasm, path: "/Users/filipecabaco/workspace/kino_wasm/"}],
   force: true
 )
 ```
@@ -27,14 +27,14 @@ When you add the cell `Rust Code Cell` it will include two fields:
 
 When you change the code in the first editor, it will trigger the `blur` event and send the altered source code to wasm_runner to compile and run based on the args given
 
-<!-- livebook:{"attrs":{"code":"[1,2,3]","id":"7tpHLsDZsYDvTQ==","output":"number of params does not match. expected 3, got 2","source":"#[no_mangle]\npub extern fn run(x: i32, y: i32, z: i32) -> i32 {\n    x + y + z\n}\n"},"chunks":null,"kind":"Elixir.KinoWasm.CodeCell","livebook_object":"smart_cell"} -->
+<!-- livebook:{"attrs":{"code":"[1,2]","id":"U/aW2Pi0OKYFMw==","language":"rust","output":[3],"source":"#[no_mangle]\npub extern fn run(x: i32, y: i32) -> i32 {\n    x + y\n}\n"},"chunks":null,"kind":"Elixir.KinoWasm.RustCodeCell","livebook_object":"smart_cell"} -->
 
 ```elixir
 output =
   WasmRunner.Backend.run(
     :rust,
-    "#[no_mangle]\npub extern fn run(x: i32, y: i32, z: i32) -> i32 {\n    x + y + z\n}\n",
-    [1, 2, 3]
+    "#[no_mangle]\npub extern fn run(x: i32, y: i32) -> i32 {\n    x + y\n}\n",
+    [1, 2]
   )
 ```
 
@@ -46,11 +46,35 @@ The output of the function is stored in a variable called `output` so it can be 
 output
 ```
 
+With `Zig Code Cell` we can follow the same idea, some code and then the arguments
+
+<!-- livebook:{"attrs":{"code":"[1,2]","id":"2QxYd0e3z4oVQA==","language":"zig","output":[3],"source":"export fn run(a: i32, b: i32) i32 {\n    return a + b;\n}\n"},"chunks":null,"kind":"Elixir.KinoWasm.ZigCodeCell","livebook_object":"smart_cell"} -->
+
+```elixir
+output =
+  WasmRunner.Backend.run(:zig, "export fn run(a: i32, b: i32) i32 {\n    return a + b;\n}\n", [
+    1,
+    2
+  ])
+```
+
 ### Requirements
+
+This were only tested in OSX.
 
 #### Rust backend
 
 You'll need to install this two dependencies
 
-* Install Rust
+* Install Rust with [https://www.rust-lang.org/tools/install](https://www.rust-lang.org/tools/install)
 * Install wasm-pack
+* Rust binaries in `~/.cargo/bin/cargo`
+
+#### Zig backend
+
+* Install Zig 0.11.0 with Homebrew
+* Zig binary in `/opt/homebrew/Cellar/zig/0.11.0/bin/zig`
+
+### Known issues
+
+* Paths are not properly assigned when running System.cmd so at the moment paths for executables are too hard coded... This is the first thing I will need to fix!

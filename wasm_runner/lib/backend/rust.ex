@@ -1,6 +1,8 @@
 defmodule WasmRunner.Backend.Rust do
   @behaviour WasmRunner.Backend
+
   require Logger
+
   @impl true
   def compile(source, id) do
     with :ok <- check_syntax(source, id),
